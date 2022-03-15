@@ -55,7 +55,7 @@
 <script>
     const laptopByBrand = $('.header-menu .category-item-menu .laptop-by-brand')
     $.ajax({
-        url: "<?=BASE_URL?>user-ajax/menu.php",
+        url: "<?=BASE_URL?>api/product/product.php",
         type: "get",
         data: {
             action: 'get-list-laptop-brand',

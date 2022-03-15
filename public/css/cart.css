@@ -137,7 +137,8 @@
     color: var(--red);
 }
 
-.btn-buy-submit-cart {
+.btn-buy-submit-cart,
+.btn-submit-payment {
     width: 100%;
     margin-top: 10px;
     
@@ -187,6 +188,7 @@
 
 .box-address .box-address-item {
     display: flex;
+    align-items: center;
     margin-bottom: 10px;
 }
 
@@ -250,7 +252,20 @@
     display: inline-block;
 }
 
-.cart.step-2 .total-cart-price,
+.cart.step-2 .div-total-cart,
 .cart.step-2 .total-count  {
     padding: 10px;
+}
+
+.box-address .box-address-item.radio label {
+    width: 100%;
+    margin-left: 10px;
+}
+
+.wrapper-address {
+    display: none;
+}
+
+.wrapper-address.active {
+    display: block;
 }

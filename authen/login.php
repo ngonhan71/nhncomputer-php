@@ -79,12 +79,18 @@
                 <form id="form-login" action="" method="POST">
                     <p class="message-request">Đăng nhập vào tài khoản!</p>
                     <div class="form-group">
-                        <label for="input-email" class="auth-icons fas fa-envelope"></label>
-                        <input required id="input-email" type="email" class="form-control" placeholder="Email">
+                        <div class="wrapper-input">
+                            <label for="input-email" class="auth-icons fas fa-envelope"></label>
+                            <input required id="input-email" type="email" class="form-control" placeholder="Email">
+                        </div>
+                        <span class="form-message">message</span>
                     </div>
                     <div class="form-group" id="form-group-password">
-                        <label for="input-fullname" class="auth-icons fas fa-lock"></label>
-                        <input required id="input-password" type="password" class="form-control" placeholder="Mật khẩu">
+                        <div class="wrapper-input">
+                            <label for="input-fullname" class="auth-icons fas fa-lock"></label>
+                            <input required id="input-password" type="password" class="form-control" placeholder="Mật khẩu">
+                        </div>
+                        <span class="form-message">Sai mat khau</span>
                     </div> 
                     <a href="" class="forgot-password">Quên mật khẩu?</a>
                     <button class="btn btn-submit-login" type="submit">Đăng nhập</button>

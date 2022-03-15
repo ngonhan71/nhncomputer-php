@@ -3,7 +3,29 @@
     
     include_once "partials/header.php";
 
-    
+    $activeBoxAddress = '';
+    $customerIdBuy = '';
+
+    if (empty($_SESSION['customer_id'])) {
+        $activeBoxAddress = 'active';
+    }
+
+    $customerFullName = '';
+    if (isset($customerInfo['given_name']) && isset($customerInfo['family_name'])) {
+        $customerFullName = $customerInfo['family_name']. ' '.$customerInfo['given_name'];
+    }
+    $addressResult = [];
+    if (isset($_SESSION['customer_id'])) {
+        $sqlGetAddress = "select * from address where customer_id = ?";
+        $addressResult = executeGetDataBindParam($sqlGetAddress, "s", [$customerId]);
+        $customerIdBuy = $_SESSION['customer_id'];
+
+    }
+
+    if (count($addressResult) <= 0) {
+        $activeBoxAddress = 'active';
+    }
+
 ?>
     <div class="breadcrumb">
         <div class="container">
@@ -114,7 +136,7 @@
                     <p class="total-item-price">'.number_format($totalItemPrice, 0, ',', '.').'đ</p>
                 </td>
                 <th>
-                    <button class="btn-delete-from-cart" data-id="'.$productId.'"  id="button_'.$productId.'" data-price="'.$itemPrice.'" data-total="'.$totalItemPrice.'">
+                    <button class="btn-delete-from-cart" data-id="'.$productId.'"  id="button_'.$productId.'" data-price="'.$itemPrice.'" data-total="'.$totalItemPrice.'" data-name="'.$productInfo['name'].'">
                         <i class="bi bi-x-lg"></i>  
                     </button>
                 </th>
@@ -163,7 +185,7 @@
                         <div class="box-address">
                             <div class="box-address-item">
                                 <label for="">Họ tên</label>
-                                <input type="text" id="buyer_name" class="input-text" placeholder="Họ và tên">
+                                <input type="text" id="buyer_name" class="input-text" value="<?=$customerFullName?>">
                             </div>
                             <div class="box-address-item">
                                 <label for="">Số điện thoại</label>
@@ -171,31 +193,57 @@
                             </div>
                             <div class="box-address-item">
                                 <label for="">Email</label>
-                                <input type="text" id="buyer_email" class="input-text" placeholder="Nhập email">
+                                <input type="text" id="buyer_email" class="input-text" value="<?php if(isset($customerInfo['email'])) echo $customerInfo['email']; ?>">
                             </div>
-                            <div class="box-address-item">
-                                <label for="">Tỉnh/Thành phố</label>
-                                <select name="" id="buyer_province">
-                                    <option value="">Bến Tre</option>
-                                </select>
+<?php
+
+    if (count($addressResult) > 0) {
+        $isFirst = true;
+        foreach ($addressResult as $key => $value) {
+            $isChecked = '';
+            if ($isFirst) {
+                $isChecked = 'checked';
+                $isFirst = false;
+            } 
+            echo '<div class="box-address-item radio">
+                        <input '.$isChecked.' name="address" type="radio" value="'.$value['address'].'">
+                        <label for="">'.$value['address'].'</label><br>  
+                   </div>';
+        }
+        echo '<div class="box-address-item radio">
+            <input name="address" type="radio" value="other">
+            <label for="">Địa chỉ khác</label><br>  
+        </div>';
+    }
+
+?>
+                            <div class="wrapper-address <?=$activeBoxAddress?>">
+                                <div class="box-address-item">
+                                    <label for="">Tỉnh/Thành phố</label>
+                                    <select name="" id="buyer_province">
+                                        <option value="">Bến Tre</option>
+                                    </select>
+                                </div>
+                                <div class="box-address-item">
+                                    <label for="">Quận/Huyện</label>
+                                    <select name="" id="buyer_district">
+                                        <option value="">Quận/Huyện</option>
+                                    </select>
+                                </div>
+                                <div class="box-address-item">
+                                    <label for="">Phường/Xã</label>
+                                    <select name="" id="buyer_ward">
+                                        <option value="">Phường/Xã</option>
+                                    </select>
+                                </div>
+                                <div class="box-address-item">
+                                    <label for="">Địa chỉ</label>
+                                    <input type="text" id="buyer_address" class="input-text" placeholder="Số nhà, tên đường">
+                                </div>
+                                <input type="hidden" id="buyer_fulladdress" value="">
+                                <input type="hidden" id="buyer_customer_id" value="<?=$customerIdBuy?>">
                             </div>
-                            <div class="box-address-item">
-                                <label for="">Quận/Huyện</label>
-                                <select name="" id="buyer_district">
-                                    <option value="">Quận/Huyện</option>
-                                </select>
-                            </div>
-                            <div class="box-address-item">
-                                <label for="">Phường/Xã</label>
-                                <select name="" id="buyer_ward">
-                                    <option value="">Phường/Xã</option>
-                                </select>
-                            </div>
-                            <div class="box-address-item">
-                                <label for="">Địa chỉ</label>
-                                <input type="text" id="buyer_address" class="input-text" placeholder="Số nhà, tên đường">
-                            </div>
-                        </div>
+                         </div>
                     </div>
                 </div>
                 <div class="col col-xl-4">
@@ -207,26 +255,26 @@
                                    echo $html;
                                 ?>
                             </div>
-                            <div class="total-cart-price row">
+                            <div class="div-total-cart row">
                                 <span>Thành tiền</span>
-                                <span class="total-cart-payment"><?=number_format($totalCart, 0, ',', '.')?>đ</span>
+                                <span class="total-cart-payment" data-total="<?=$totalCart?>"><?=number_format($totalCart, 0, ',', '.')?>đ</span>
                             </div>
                         </div>
                         <div class="box-pay-method">
                             <h4>Chọn hình thức thanh toán</h4>
-                            <div class="pay-method-item">
+                            <!-- <div class="pay-method-item">
                                 <label for="pay-method1">
                                     <input type="radio" checked name="pay_method" class="input-radio" id="pay-method1">
                                     <span class="txt">Thanh toán qua chuyển khoản qua tài khoản ngân hàng (khuyên dùng)</span>
                                 </label>
-                            </div>
+                            </div> -->
                            <div class="pay-method-item">
                             <label for="pay-method2">
-                                    <input type="radio" name="pay_method" class="input-radio" id="pay-method2">
+                                    <input checked type="radio" name="pay_method" class="input-radio" id="pay-method2" value="2">
                                     <span class="txt">Thanh toán khi nhận hàng</span>
                                 </label>
                            </div>
-                            <button class="btn btn-buy-submit-cart">Tiến hành đặt hàng</button>
+                            <button class="btn btn-submit-payment">Tiến hành đặt hàng</button>
                         </div>
                     </div>
                 </div>
@@ -403,19 +451,39 @@
 
     function handleUpdateTotalCart() {
         let newTotalCartPrice = 0;
+        let arr = []
+
         $.each($('.btn-delete-from-cart'), function(index, button) {
             newTotalCartPrice += $(this).data('total')
+            const tr = $(this).parent().parent();
+            let item = {
+                productId: $(this).data('id'),
+                productName: $(this).data('name'),
+                quantity: $(this).data('total') / $(this).data('price'),
+                itemPrice: $(this).data('price')
+            }
+            arr.push(item)
         })
         
         const newTotalCartPriceFormat = new Intl.NumberFormat('de-DE').format(newTotalCartPrice)
         $('.total-cart-price').text(`${newTotalCartPriceFormat}đ`)
 
         $('.total-cart-payment').text(`${newTotalCartPriceFormat}đ`)
+        $('.total-cart-payment').attr('data-total', newTotalCartPrice)
 
+
+        let html = ``
+        arr.forEach((item) => {
+            let itemPriceFormat = new Intl.NumberFormat('de-DE').format(item.itemPrice)
+            html += `<div class="item">
+                        <span class="count">${item.quantity}x</span>
+                        <span>${item.productName}</span>
+                        <span>${itemPriceFormat}đ</span>
+                    </div>`
+        })
+        $('.cart.step-2 .product-list').html(html)
     }
 
-
-    
 
 </script>
 
@@ -443,4 +511,90 @@
 
         })
     })
+</script>
+
+
+<script>
+    $(document).ready(function() {
+        $('.box-address-item input[name=address]').change(function() {
+            const valueRadio = $(this).val()
+            if (valueRadio == 'other') {
+                if (!$('.wrapper-address').hasClass('active')) {
+                    $('.wrapper-address').addClass('active')
+                }
+            } else {
+                if ($('.wrapper-address').hasClass('active')) {
+                    $('.wrapper-address').removeClass('active')
+                }
+            }
+        })
+
+        $('.btn-submit-payment').click(function() {
+            let fullName = $('.box-address-item #buyer_name').val();
+            let phoneNumber = $('.box-address-item #buyer_mobile').val();
+            let email = $('.box-address-item #buyer_email').val();
+
+            let fullAddress = ''
+
+            const valueRadio = $('.box-address-item input[name=address]:checked').val()
+
+            if (valueRadio && valueRadio != 'other') {
+                fullAddress = valueRadio
+            } else {
+
+                let province = $('#buyer_province option:selected').text()
+                let district = $('#buyer_district option:selected').text()
+                let ward = $('#buyer_ward option:selected').text()
+                let address = $('#buyer_address').val();
+                fullAddress = `${address}, ${ward}, ${district}, ${province}`
+
+            }
+
+            const payMethod = $('.pay-method-item input[name=pay_method]:checked').val()
+            const customerId = $('#buyer_customer_id').val();
+            const total = $('.cart.step-2 .total-cart-payment').attr('data-total')
+            // ajax
+            console.log({
+                customerId,
+                fullName,
+                phoneNumber, 
+                email,
+                fullAddress,
+                total,
+                payMethod
+            })
+
+            handleAddCart({
+                customerId,
+                fullName,
+                phoneNumber, 
+                email,
+                fullAddress,
+                total,
+                payMethod
+            })
+        
+          
+        })
+    })
+
+    function handleAddCart(input) {
+
+        $.ajax({
+            url: '<?=BASE_URL?>api/cart/cart.php',
+            type: 'post',
+            data: {
+                action: 'add-cart',
+                ...input
+            },
+            dataType: 'json',
+            success: function(result) {
+                console.log(result)
+                if (result) {
+                    location.href = './index.php'
+                } 
+            }
+        })
+
+    }
 </script>

@@ -7,6 +7,8 @@
         
         // $keywordArray = explode(' ', $keyword);
         // var_dump($keywordArray);
+        // XSS
+        $keyword = strip_tags($keyword);
         $paramSearch = "%" . $keyword . "%";
         $sqlSearch = "  select * from product
                         where product.name like ?

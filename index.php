@@ -125,7 +125,7 @@
                     <p class="price">'.number_format(round($priceDiscount, - 4), 0, ',', '.').'đ</p>';
             }        
             else echo ' <div class="discount-info">
-                            <span class="old-price" style="color: white">'.$value['price'].'</span>
+                            <span class="old-price">'.$value['price'].'</span>
                             <span class="discount"></span>
                         </div>
                         <p class="price">'.number_format($value['price'], 0, ',', '.').'đ</p>';

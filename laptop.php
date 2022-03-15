@@ -248,14 +248,11 @@
         filterData();
 
         $('.pagination .pages').click(function(e) {
-            const btnPage = e.target.closest('.page')
-            filterData({page: parseInt(btnPage.innerText)})
+            const btnPage = e.target.closest('.page-item')
+            filterData({page: parseInt(btnPage.getAttribute('data-id'))})
         })
 
     })
-
-   
-   
 
 
     function filterData(options) {
@@ -291,18 +288,27 @@
                 const data = result.data
                 $('#loading').hide();
                 let html = ``;
+                let htmlPage = ``
                 if (data.length > 0) {
-                    let htmlPage = ``
-                    for(let i = 0; i < result.totalPage; i++) {
-                        let active = ''
-                        if (page == (i + 1)) {
-                            active = 'active'
+                    if (result.totalPage > 1) {
+                        if (page > 1) {
+                            htmlPage += `<li data-id=${page-1} class="page-item"><p class="page-link">Previous</p></li>`
                         }
-                        htmlPage += `<li data-id=${i+1} class="page ${active}" style="padding: 10px; cursor: pointer;">${i+1}</li>`
+                        for(let i = 0; i < result.totalPage; i++) {
+                            if (page == (i + 1)) {
+                                htmlPage += `<li data-id=${i+1} class="page-item active"><p class="page-link">${i+1}</p></li>`
+                            } else {
+                                htmlPage += `<li data-id=${i+1} class="page-item"><p class="page-link">${i+1}</p></li>`
+                            }
+                        }
+                        if (page < result.totalPage) {
+                            htmlPage += `<li data-id=${page+1} class="page-item"><p class="page-link">Next</p></li>`
+                        }
+                        
+                    } else {
+                        htmlPage = ``;
                     }
                     
-                    $('.pagination .pages').html(htmlPage)
-
 
                     $.each(data, function(index, item) {
                         let price = item['price']
@@ -351,8 +357,12 @@
                     
                     })
                 }
-                else html += `<h2>No Data Found</h2>`
+                else {
+                    html += `<h2>No Data Found</h2>`
+                }
                 $('#result-filter-data .row').html(html)
+                $('.pagination .pages').html(htmlPage)
+
             }
         });
     }

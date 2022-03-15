@@ -39,21 +39,21 @@
         else {
             $mailer = new PHPMailer(true);
             $password = randomString(10);
+            $customerId = randomString(10);
             $hashPassword = md5($password);
             $receiver = array(
                     'email' => $email,
                     'name' => $givenName,
                     'password' => $password
                 );
-            $sqlInsert = "insert into customer(email, password, family_name, given_name) values (?, ?, ?, ?)";
-            $isSuccess = executeSqlBindParam($sqlInsert, "ssss", [$email, $hashPassword, $familyName, $givenName]);
+            $sqlInsert = "insert into customer(customer_id, email, password, family_name, given_name) values (?, ?, ?, ?, ?)";
+            $isSuccess = executeSqlBindParam($sqlInsert, "sssss", [$customerId, $email, $hashPassword, $familyName, $givenName]);
 
             $result = sendMailCustomerInformation($mailer, $receiver);
     
             echo json_encode($result && $isSuccess);
            
         }
-
        
     }
 
@@ -66,7 +66,7 @@
         $customer = executeGetDataBindParam($sql, "ss", [$email, $hashPassword]);
 
         if (count($customer) > 0) {
-            $_SESSION['email'] = $email;
+            $_SESSION['customer_id'] = $customer[0]['customer_id'];
             echo json_encode(true);
         }
         else {

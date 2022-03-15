@@ -42,11 +42,15 @@
             <div class="register-input-email register">
                 <form id="form-register" action="" method="POST">
                     <p class="message-request">Vui lòng nhập thông tin để đăng ký!</p>
-                    <div class="form-group">
-                        <label for="input-email" class="auth-icons fas fa-envelope"></label>
-                        <input required id="input-email" type="email" class="form-control" placeholder="Nhập email (*)">
-                    </div>
-                  <div class="wrapper-name row">
+                   <div class="wrapper-email row">
+                        <div class="col col-xl-12">
+                            <div class="form-group">
+                                <label for="input-email" class="auth-icons fas fa-envelope"></label>
+                                <input required id="input-email" type="email" class="form-control" placeholder="Nhập email (*)">
+                            </div>
+                        </div>
+                   </div>
+                    <div class="wrapper-name row">
                         <div class="col col-xl-6">
                             <div class="form-group">
                                 <label for="input-email" class="auth-icons fas fa-user"></label>
@@ -59,7 +63,7 @@
                                 <input required id="input-given-name" type="text" class="form-control" placeholder="Tên của bạn (*)">
                             </div>
                        </div>
-                  </div>
+                    </div>
                     <div class="row footer">
                         <div class="box-btn">
                             <button class="btn btn-submit" type="submit">Đăng ký</button>
@@ -73,60 +77,6 @@
                     <span>Bạn đã có tài khoản? </span><a class="link-login" href="./login.php">Đăng nhập ngay tại đây!</a>
                 </div>
             </div>
-            <!-- <div class="register-customer-info register">
-                <form id="form-register" action="" method="GET">
-                    <div class="row">
-                        <p class="message-request">Vui lòng nhập thông tin cá nhân và địa chỉ nhận hàng!</p>
-                        <div class="col col-xl-6">
-                            <div class="form-group">
-                                <label for="input-fullname" class="auth-icons fas fa-user"></label>
-                                <input id="input-email" type="email" class="form-control" placeholder="Họ và tên">
-                            </div>
-                            <div class="form-group">
-                                <label for="input-fullname" class="auth-icons fas fa-lock"></label>
-                                <input id="input-email" type="email" class="form-control" placeholder="Mật khẩu">
-                            </div>
-                            <div class="form-group">
-                                <label for="input-fullname" class="auth-icons fas fa-lock"></label>
-                                <input id="input-email" type="email" class="form-control" placeholder="Nhập lại mật khẩu">
-                            </div>
-                            <button class="btn" type="submit">Đăng ký</button>
-                        </div>
-                        <div class="col col-xl-6">
-                            <div class="row">
-                                <div class="col col-xl-6">
-                                    <div class="form-group">
-                                        <select name="" id="province">
-                                            <option value="">Tỉnh / thành</option>
-                                        </select>
-                                        
-                                    </div>
-                                </div>
-                                <div class="col col-xl-6">
-                                    <div class="form-group">
-                                        <select name="" id="district">
-                                            <option value="">Quận / huyện</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col col-xl-6">
-                                    <div class="form-group">
-                                        <select name="" id="ward">
-                                            <option value="">Phường / xã</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col col-xl-12">
-                                    <div class="form-group">
-                                        <input id="input-address" type="email" class="form-control" placeholder="Số, đường, khu phố">
-                                    </div>
-                                </div>
-                            </div>
-                           
-                        </div>
-                    </div>
-                </form>
-            </div> -->
        </div>
     </div>
 </div>
@@ -149,13 +99,26 @@
     include_once BASE_URL."partials/footer.php";
 
 ?>
-    <!-- <script src=">public/js/register.js"></script> -->
 
 
 <script type="module">
     import { isValidName, removeDuplicateSpaceAndTrim, handleUpperCaseFirstLetter } from '<?=BASE_URL?>public/js/validate.js';
     $(document).ready(function() {
         const formRegister = $('#form-register')
+
+        $('#input-family-name').blur(function() {
+            let value = $(this).val()
+            value = removeDuplicateSpaceAndTrim(value)
+            value = handleUpperCaseFirstLetter(value)
+            $(this).val(value)
+        })
+
+        $('#input-given-name').blur(function() {
+            let value = $(this).val()
+            value = removeDuplicateSpaceAndTrim(value)
+            value = handleUpperCaseFirstLetter(value)
+            $(this).val(value)
+        })
 
         formRegister.submit(function(e) {
             e.preventDefault();

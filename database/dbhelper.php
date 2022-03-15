@@ -52,11 +52,13 @@
 
         $stmt = $connect->prepare($sql);
         $stmt->bind_param($dataType, ...$param); 
-        $flag = false; 
+        // $flag = false; 
         if ($stmt->execute()) {
             $flag = true;
-            $stmt->close();     
+        } else {
+            $flag = false;
         }
+        $stmt->close();     
         $connect->close();
         return $flag;
     }

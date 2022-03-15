@@ -76,6 +76,10 @@
     background-color: var(--white);
 }
 
+[data-theme="dark"] .dots li.active {
+    background-color: white;
+}   
+
 /* @media (min-width: 1024px) and (max-width: 1279px) {
   
 

@@ -130,6 +130,27 @@
             </div>
         </div>
     </div>
+    <?php
+                $sqlGetReview = "select * from product_review where product_id = ?";
+                $dataReview = executeGetDataBindParam($sqlGetReview, "s", [$productId]);
+                if (count($dataReview) > 0) {
+                    $productReview = $dataReview[0];
+                }
+                if (isset($productReview)) { ?>
+                    <div class="review">
+                            <div class="container">
+                                <div class="review-content">
+    <?php
+                        echo $productReview['content'];
+                   
+    ?>
+                                </div>
+                            </div>
+                        </div>
+            <?php
+              }
+                ?>
+      
     <div class="modal-product-detail">
         <div class="modal-content">
             <div class="modal-header">

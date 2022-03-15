@@ -16,6 +16,9 @@
                 $keyword = $_GET['keyword'];
                 liveSearch($keyword);
                 break;
+            case 'get-list-laptop-brand':
+                getListLaptopBrand();
+                break;
         }
     }
     if (isset($_POST['action'])) {
@@ -51,6 +54,7 @@
         echo json_encode($data);
     }
     function filterDataLaptop() {
+        include_once "../../database/connect.php";
         include_once "../../database/dbhelper.php";
         $sql = "select * from product, laptop_specification
                 where product.product_id = laptop_specification.product_id
@@ -79,7 +83,7 @@
         }
         
         $data = executeGetData($sql);
-        $pageSize = 2;
+        $pageSize = 4;
 
         $countData = count($data);
         $totalPage = ceil($countData / $pageSize);
@@ -98,10 +102,12 @@
             echo json_encode([
                 'data' => $dataOfPage,
                 'totalPage' => $totalPage,
-                'currentPage' => $page
+                'currentPage' => $page,
             ]);
         }
-        else echo json_encode([]);
+        else echo json_encode([
+            'data' => [],
+        ]);
     }
     function liveSearch($keyword) {
         include_once "../../database/dbhelper.php";
@@ -112,10 +118,41 @@
         echo json_encode($data);
     }
 
+    function getListLaptopBrand() {
+        include_once "../../database/dbhelper.php";
+        $sql = "select distinct brand.slug, brand.name from brand, product
+                where brand.id = product.brand
+                and product.product_type = 1";
+        $data = executeGetData($sql);
+       
+        $out = array();
+        foreach ($data as $key => $value) {
+            $out[] = array(
+                'slug' => $value['slug'],
+                'name' => $value['name']
+            );
+        }
+        echo json_encode($out);
+    }
+
     function addToCart($productId, $quantity, $productType) {
+        include_once "../../database/dbhelper.php";
+        $sql = "select * from product where product_id = ?";
+        $result = executeGetDataBindParam($sql, "s", [$productId]);
+
+        $productPrice = $result[0]['price'];
+        $discount = $result[0]['discount'];
+
+        if ($discount != 0) {
+            $productPrice = $productPrice - $productPrice * ($discount)/100;
+            $productPrice = round($productPrice, -4);
+        }
+
         $cart = [];
         if (isset($_SESSION['cart']))
             $cart = $_SESSION['cart'];
+
+        
         $isFind = false;
         for ($i = 0; $i < count($cart); $i++) {
             if ($cart[$i]['product_id'] == $productId) {
@@ -125,7 +162,11 @@
             }
         }
         if (!$isFind) {
-            $cart[] =  array('product_id' => $productId, 'quantity' => $quantity, 'type' => $productType);
+            $cart[] =  array(
+                'product_id' => $productId, 
+                'quantity' => $quantity, 
+                'price' => $productPrice,
+                'type' => $productType);
         }
         $_SESSION['cart'] = $cart;
         echo json_encode($cart);
@@ -163,4 +204,6 @@
         $out = array('status' => 'success', 'data' => $cart);
         echo json_encode($out);
     }
+
+
 ?>

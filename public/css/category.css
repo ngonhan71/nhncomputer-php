@@ -12,9 +12,18 @@
     color: var(--gray-03);
 }
 
+[data-theme="dark"] .category-page .breadcrumb ul li a {
+    color: white;
+}
+
 .category-page .breadcrumb ul li:not(:first-child) a {
     color: var(--bg-header);
 }
+
+[data-theme="dark"] .category-page .breadcrumb ul li:not(:first-child) a {
+    color: white;
+}
+
 
 
 .category-page .breadcrumb ul li:not(:last-child)::after {
@@ -24,7 +33,7 @@
     
     font-size: 20px;
     
-    color: var(--gray-03);
+    color: #4A4A4A;
 }
 
 .category-page .heading {
@@ -34,14 +43,26 @@
     border-bottom: 2px solid var(--bg-header);
 }
 
+
+[data-theme="dark"] .category-page .heading {
+    color: white;
+    border-color: white;
+}
+
+
 .category-content {
     margin-top: 30px;
 }
 
 .category-content .filter {
     padding: 10px;
-    background-color: var(--white);
+    background-color: white;
     border-radius: 4px;
+}
+
+[data-theme="dark"] .category-content .filter {
+    background-color: var(--bg-body);
+    color: white;
 }
 
 .category-content .filter .title {
@@ -102,6 +123,10 @@
     padding: 8px;
 }
 
+[data-theme="dark"] .category-page .category-page-right {
+    background-color: var(--white-gray-02);
+}
+
 
 .product-list .col {
     padding: 0;
@@ -110,6 +135,10 @@
 .product-list .row {
     align-items: center;
     margin: 0;
+}
+
+.product-list {
+    margin-bottom: 16px;
 }
 
 .product-list .product-item {
@@ -210,6 +239,45 @@
 }
 
 
+
 .pagination .pages li.active {
     color: var(--red);
+}
+
+
+.pagination .page-link {
+    position: relative;
+    display: block;
+    color: #0d6efd;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.page-item:first-child .page-link {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.page-item:last-child .page-link {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.page-item .page-link {
+    margin-left: -1px;
+}
+
+.pagination .page-item.active .page-link {
+    color: #fff;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.pagination .page-item:hover .page-link {
+    color: #fff;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
 }

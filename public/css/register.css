@@ -37,6 +37,10 @@ form {
     color: #2cc067;
 }
 
+.wrapper-input {
+    position: relative;
+}
+
 form .form-group .form-control {
     padding-left: 40px;
 }
@@ -127,4 +131,31 @@ form .loading img {
 #form-login .loading {
     display: grid;
     place-items: center;
+}
+
+.form-message {
+    display: inline-block;
+    margin-top: 4px;
+    margin-left: 4px;
+    display: none;
+}
+
+.form-group.invalid .form-control {
+    border: 1px solid var(--red);
+}
+
+.form-group.invalid .form-message {
+    color: var(--red);
+}
+
+.form-group.valid .form-control {
+    border: 1px solid var(--green-01);
+}
+
+.form-group.valid .form-message {
+    color: var(--green-01);
+}
+
+form .form-group {
+    margin-bottom: 14px;
 }

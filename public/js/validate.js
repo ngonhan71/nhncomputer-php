@@ -34,3 +34,9 @@ export const handleUpperCaseFirstLetter = (string) => {
     })
     return result.join(' ');
 }
+
+export const toSlug = (string) => {
+    string = string.toLowerCase();
+    let reg = /[\s]+/g
+    return string.replace(reg,  '-');
+}

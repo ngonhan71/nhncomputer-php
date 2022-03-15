@@ -174,4 +174,64 @@
 
     }
 
+
+    function pagination($totalPage, $currentPage) {
+        if ($totalPage <= 1) {
+            return;
+        } 
+        echo   '<nav class="pagination-container">
+                        <ul class="pagination">';
+        if ($currentPage > 1) {
+            echo '<li class="page-item"><a class="page-link" href="?page='.($currentPage-1).'">Previous</a></li>';
+        }
+                                    
+        $availablePage = [1, $currentPage - 1, $currentPage, $currentPage + 1, $totalPage];
+        $isFirst = $isLast = false;
+        for ($i = 0; $i < $totalPage; $i++) {
+            if (!in_array($i + 1, $availablePage)) {
+                if (!$isFirst && $currentPage > 3) {
+                    echo '<li class="page-item"><a class="page-link" href="?page='.($currentPage-2).'">...</a></li>';
+                    $isFirst = true;
+                }
+                if (!$isLast && ($i+1) > $currentPage) {
+                    echo '<li class="page-item"><a class="page-link" href="?page='.($currentPage+2).'">...</a></li>';
+                    $isLast = true;
+                }
+                continue;
+            }
+            if ($currentPage == ($i + 1)) {
+                echo '<li class="page-item active"><a class="page-link" href="#">'.($i+1).'</a></li>';
+            } else {
+                echo '<li class="page-item "><a class="page-link" href="?page='.($i+1).'">'.($i+1).'</a></li> ';
+                
+            }
+        }
+
+        if ($currentPage < $totalPage) {
+            echo '<li class="page-item"><a class="page-link" href="?page='.($currentPage+1).'">Next</a></li>';
+        }
+        echo '  </ul>
+            </nav>';
+                                     
+    }
+
+    function middlewareisRoleAdmin($email) {
+        if (!defined('BASE_URL')) {
+            define('BASE_URL', './');
+        }
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        include_once BASE_URL."database/dbhelper.php";
+    
+        $sql = "select * from administrator where email = ?";
+        $admin = executeGetDataBindParam($sql, "s", [$email]);
+        if (count($admin) > 0) {
+            return true;
+        }
+        return false;
+    
+    }
+
 ?>

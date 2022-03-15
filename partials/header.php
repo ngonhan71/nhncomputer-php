@@ -12,10 +12,19 @@
     include_once BASE_URL."database/dbhelper.php";
     include_once BASE_URL."utility/utility.php";
 
-    if (!empty($_SESSION['email'])) {
-        $emailCustomer = $_SESSION['email'];
-        $sqlGetCustomer = "select * from customer where email = ?";
-        $customer = executeGetDataBindParam($sqlGetCustomer, "s", [$emailCustomer]);
+    if (!empty($_SESSION['customer_id'])) {
+        $customerId = $_SESSION['customer_id'];
+        $sqlGetCustomer = "select * from customer where customer_id = ?";
+        $customer = executeGetDataBindParam($sqlGetCustomer, "s", [$customerId]);
+        if (count($customer) > 0)
+            $customerInfo = $customer[0];
+        // var_dump($customer);
+    }
+
+    if (!empty($_SESSION['customer_id'])) {
+        $customerId = $_SESSION['customer_id'];
+        $sqlGetCustomer = "select * from administrator where administrator_id = ?";
+        $customer = executeGetDataBindParam($sqlGetCustomer, "s", [$customerId]);
         if (count($customer) > 0)
             $customerInfo = $customer[0];
         // var_dump($customer);
@@ -59,6 +68,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js" integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+
     <link rel="stylesheet" href="<?=BASE_URL?>public/css/base.css">
     <link rel="stylesheet" href="<?=BASE_URL?>public/css/grid.css">
     <link rel="stylesheet" href="<?=BASE_URL?>public/css/header.css">
@@ -130,6 +140,9 @@
                         </form>
                     </div>
                    <div class="header-left">
+                       <!-- <div class="dark" style="margin-right: 8px">
+                            <a data-id="light" id="btn-dark-mode" href=""><i class="fa-solid fa-moon"></i>Dark Mode</a>
+                       </div> -->
                         <div class="wrapper-auth">
                             <?php
 
@@ -145,7 +158,7 @@
                                 // // }
                                 
                                 ?>
-                                <a href="<?=BASE_URL?>customer.php" class="icon-auth">
+                                <a href="<?=BASE_URL?>customer/index.php" class="icon-auth">
                                     <i class="fas fa-user"></i>
                                </a>
                             <span>
@@ -153,7 +166,7 @@
                                 <?php
 
                                     if (!empty($customerInfo)) {
-                                        echo '<a title="Đăng nhập" href="'.BASE_URL.'customer.php">'.$customerInfo['given_name'].'</a>';
+                                        echo '<a title="Đăng nhập" href="'.BASE_URL.'customer/index.php">'.$customerInfo['given_name'].'</a>';
                                         echo '<a title="Đăng xuất" href="'.BASE_URL.'authen/logout.php">Đăng xuất</a>';
 
                                     }
@@ -406,7 +419,7 @@
                                             </div>
                                             <div class="col col-xl-10 col-9">
                                                 <p class="product-name">${name}</p>
-                                                <p class="product-price">Gia: ${price}đ</p>
+                                                <p class="product-price">Giá: ${price}đ</p>
                                             </div>
                                         </a>
                                     </li>`;
@@ -468,5 +481,23 @@
         });
 
     }
+
+</script>
+
+
+<script>
+    // const toggleSwitchDarkMode = document.getElementById('btn-dark-mode')
+
+    // toggleSwitchDarkMode.addEventListener('click', handleSwitchDarkMode)
+
+    // function handleSwitchDarkMode(e) {
+    //     e.preventDefault();
+    //     const currentTheme = document.documentElement.getAttribute('data-theme')
+    //     if (currentTheme == 'light') {
+    //         document.documentElement.setAttribute('data-theme', 'dark');
+    //     } else {
+    //         document.documentElement.setAttribute('data-theme', 'light');
+    //     }
+    // }
 
 </script>
